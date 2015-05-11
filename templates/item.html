@@ -1,0 +1,15 @@
+<div class="{{ 'col-lg-4 col-sm-4' if not leader else '' }} hero-feature text-center">
+    <div class="thumbnail">
+        <a href="/detail/{{ id }}" class="link-p">
+            <img src="/static/images/items/{{ id }}.png" alt="">
+        </a>
+        <div class="caption prod-caption">
+            <h4><a href="/detail/{{ id }}">{{ name }}</a></h4>
+            <p>{{ comment }}</p>
+            <div class="btn-group">
+                <a href="javascript:;" class="btn btn-default price"> {{ int(price) }} руб.</a>
+                <a href="javascript:;" iid="{{ id }}" class="btn btn-gray add-to-cart"><i class="fa fa-shopping-cart"></i> Купить</a>
+            </div>
+        </div>
+    </div>
+</div>

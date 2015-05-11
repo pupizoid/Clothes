@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+
+{#        	<!-- Slider -->#}
+{#        	<div class="col-lg-9 col-md-12">#}
+{#                <div class="slider">#}
+{#                    <ul class="bxslider">#}
+{#                        <li>#}
+{#                            <a href="index.html">#}
+{#                                <img src="images/banner_slider-3.jpg" alt=""/>#}
+{#                            </a>#}
+{#                        </li>#}
+{#                        <li>#}
+{#                            <a href="index.html">#}
+{#                                <img src="images/banner_slider-2.jpg" alt=""/>#}
+{#                            </a>#}
+{#                        </li>#}
+{#                        <li>#}
+{#                            <a href="index.html">#}
+{#                                <img src="images/banner_slider-1.jpg" alt=""/>#}
+{#                            </a>#}
+{#                        </li>#}
+{#                    </ul>#}
+{#                </div>#}
+{#            </div>#}
+{#            <!-- End Slider -->#}
+
+			<!-- Product Selection, visible only on large desktop -->
+            <div class="col-lg-3 visible-lg">
+                <div class="row text-center">
+                    <div class="col-lg-12 col-md-12 hero-feature">
+{#                        item-selected#}
+                    </div>
+                </div>
+            </div>
+            <!-- End Product Selection -->
+        </div>
+
+        <div class="row">
+        	<div class="col-lg-3 col-md-3 col-sm-12">
+
+        		<!-- Categories -->
+        		<div class="col-lg-12 col-md-12 col-sm-6">
+	        		<div class="no-padding">
+	            		<span class="title">КАТЕГОРИИ</span>
+	            	</div>
+
+					<div class="panel-group panel-categories" id="accordion">
+	                    <div class="panel panel-default">
+	                        <div class="panel-heading">
+	                            <h4 class="panel-title">
+	                            	<a href="#">Майки</a>
+	                            </h4>
+	                        </div>
+	                    </div>
+	                </div>
+
+				</div>
+				<!-- End Categories -->
+
+				<!-- Best Seller -->
+				<div class="col-lg-12 col-md-12 col-sm-6">
+					<div class="no-padding">
+	            		<span class="title">ЛИДЕР ПРОДАЖ</span>
+	            	</div>
+                        {% raw data.leader %}
+		            <div class="hero-feature hidden-sm">
+{#		                item-sm#}
+		            </div>
+				</div>
+				<!-- End Best Seller -->
+
+        	</div>
+
+        	<div class="clearfix visible-sm"></div>
+
+			<!-- Featured -->
+        	<div class="col-lg-9 col-md-9 col-sm-12">
+        		<div class="col-lg-12 col-sm-12">
+            		<span class="title">ТОВАРЫ</span>
+            	</div>
+	            {% raw data.items %}
+        	</div>
+        	<!-- End Featured -->
+        </div>
+	</div>
+{% end %}

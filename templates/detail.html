@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-12">
+
+        <!-- Best Seller -->
+        <div class="col-lg-12 col-md-12 col-sm-12 visible-lg visible-md">
+            <div class="no-padding">
+                <span class="title">BEST SELLER</span>
+            </div>
+            <div class="thumbnail col-lg-12 col-md-12 col-sm-6 text-center">
+                <a href="detail.html" class="link-p" style="overflow: hidden; position: relative;">
+                    <img src="images/product-8.jpg" alt=""
+                         style="position: absolute; width: 250px; height: auto; max-width: none; max-height: none; left: -13px; top: 0px;">
+                </a>
+
+                <div class="caption prod-caption">
+                    <h4><a href="detail.html">Penn State College T-Shirt</a></h4>
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, minima!</p>
+
+                    <p>
+                    </p>
+
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-default">$ 528.96</a>
+                        <a href="#" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Buy</a>
+                    </div>
+                    <p></p>
+                </div>
+            </div>
+            <div class="thumbnail col-lg-12 col-md-12 col-sm-6 hidden-xs text-center">
+                <a href="detail.html" class="link-p" style="overflow: hidden; position: relative;">
+                    <img src="images/product-9.jpg" alt=""
+                         style="position: absolute; width: 280px; height: auto; max-width: none; max-height: none; left: -28px; top: 0px;">
+                </a>
+
+                <div class="caption prod-caption">
+                    <h4><a href="detail.html">Ohio State College T-Shirt</a></h4>
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, minima!</p>
+
+                    <p>
+                    </p>
+
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-default">$ 924.25</a>
+                        <a href="#" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Buy</a>
+                    </div>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+        <!-- End Best Seller -->
+
+    </div>
+
+    <div class="clearfix visible-sm"></div>
+
+    <!-- Product Detail -->
+    <div class="col-lg-9 col-md-9 col-sm-12">
+        <div class="col-lg-12 col-sm-12">
+            <span class="title">{{ data.item.get('name', 'undefined') }}</span>
+        </div>
+        <div class="col-lg-12 col-sm-12 hero-feature">
+
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <!-- Main Image -->
+                    <div class="product-main-image-container">
+                        <img src="/static/images/items/{{ data.item['_id'] }}.png" alt="" class="product-loader"
+                             style="display: none;">
+								<span class="thumbnail product-main-image"
+                                      style="position: relative; overflow: hidden;">
+									<img src="/static/images/items/{{ data.item['_id'] }}.png" alt="">
+								<img src="/static/images/items/{{ data.item['_id'] }}.png" class="zoomImg"
+                                     style="position: absolute; top: -1.21827411167513px; left: -5.53553299492386px; opacity: 0; border: none; max-width: none; max-height: none; width: 400px; height: 400px;"></span>
+                    </div>
+                    <!-- End Main Image -->
+
+                    {#							<!-- Thumbnail Image -->#}
+                    {#							<div class="col-xs-3 product-thumb-image">#}
+                    {#								<a href="images/detail1.jpg" class="thumbnail">#}
+                    {#									<img src="images/detail1.jpg" alt="">#}
+                    {#								</a>#}
+                    {#							</div>#}
+                    {#							<div class="col-xs-3 product-thumb-image">#}
+                    {#								<a href="images/detail2.jpg" class="thumbnail">#}
+                    {#									<img src="images/detail2.jpg" alt="">#}
+                    {#								</a>#}
+                    {#							</div>#}
+                    {#							<div class="col-xs-3 product-thumb-image">#}
+                    {#								<a href="images/detail3.jpg" class="thumbnail">#}
+                    {#									<img src="images/detail3.jpg" alt="">#}
+                    {#								</a>#}
+                    {#							</div>#}
+                    {#							<div class="col-xs-3 product-thumb-image">#}
+                    {#								<a href="images/detail1.jpg" class="thumbnail">#}
+                    {#									<img src="images/detail1.jpg" alt="">#}
+                    {#								</a>#}
+                    {#							</div>#}
+                    {#							<!-- End Thumbnail Image -->#}
+                </div>
+
+                <div class="visible-xs">
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="well product-short-detail">
+                        <div class="row">
+                            <div class="the-list">
+                                <h3 class="col-xs-12">
+                                    <!-- <span class="price-old">$169</span> -->
+                                    {{ int(data.item.get('price', 0)) }} рублей
+                                </h3>
+                            </div>
+                            <div class="the-list">
+                                <div class="col-xs-4">Наличие</div>
+                                <div class="col-xs-8">
+                                    <!-- <span class="red">OUT OF STOCK</span> -->
+                                    <span class="green">В наличии</span>
+                                </div>
+                            </div>
+                            <div class="the-list">
+                                <div class="col-xs-4">Доступные размеры</div>
+                                <div class="col-xs-8">
+                                    <select class="form-control">
+                                        {% for size in data.order_settings.get('sizes', {}) %}
+                                        <option value="{{ size }}">{{ size }}</option>
+                                        {% end %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="the-list">
+                                <div class="col-xs-4">Пол</div>
+                                <div class="col-xs-8">
+                                    <label>
+                                        <input type="radio" name="sex" value="male" checked=""> Мужской
+                                    </label>&nbsp;
+                                    <label>
+                                        <input type="radio" name="sex" value="female"> Женский
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <hr>
+                            <div class="col-xs-12 input-qty-detail">
+                                <button class="btn btn-default pull-left"><i class="fa fa-shopping-cart"></i> Добавить в корзину
+                                </button>
+                            </div>
+                            <div class="clearfix"></div>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+                <br clear="all">
+
+                <div class="col-xs-12 product-detail-tab">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#desc" data-toggle="tab" aria-expanded="true">Описание</a></li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="desc">
+                            <div class="well">
+                                <p>{{ data.item.get('comment', '') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+                <a class="addthis_button_preferred_1"></a>
+                <a class="addthis_button_preferred_2"></a>
+                <a class="addthis_button_preferred_3"></a>
+                <a class="addthis_button_preferred_4"></a>
+                <a class="addthis_button_compact"></a>
+            </div>
+            <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=xa-4f0c254f1302adf8"></script>
+         -->
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-lg-12 col-sm-12">
+            <span class="title">ПОСМОТРИТЕ ТАКЖЕ</span>
+        </div>
+        {{ data.related }}
+    <!-- End Product Detail -->
+    </div>
+</div>
+{% end %}

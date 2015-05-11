@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4 text-center">
+            <h4>Регистрация пользователя</h4>
+        </div>
+    </div>
+    <br/><br/><br/><br/>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <form class="form-horizontal" action="" method="post">
+                <div class="form-group">
+                    <label for="email" class="col-md-2 control-label pull-left">Почта:</label>
+                    <div class="col-md-10 ">
+                        <input class="form-control" type="text" id="email" name="email"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-default">Зарегистрироваться</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% end %}
+{% block script %}
+    <script>
+        jQuery(document).ready(function(){
+            jQuery('form').submit(function(){
+                var email = /^[0-9a-zA-Z_\.-]+@[0-9a-zA-Z-_\.]+\.[a-z]{2,3}/
+                var form = jQuery(this);
+                var valid = email.test(jQuery('#email').val())
+                if (!valid){
+                    swal({
+                        title: 'Ошибка',
+                        text: 'Вы ввели некорректный Email',
+                        type: 'error',
+                        closeOnConfurm: true
+                    })
+                    return false
+                }else{
+                    jQuery.ajax({
+                        url: form.attr('action'),
+                        method: form.attr('method'),
+                        data: form.serialize(),
+                        success: function(){
+                            swal({
+                                type: 'success',
+                                title: 'Получилось!',
+                                text: 'Вы успешно зарегистрировались в нашей системе,' +
+                                ' на указанный почтовый ящик отправленно письмо' +
+                                ' с инструкциями по дальнейшей работе',
+                                confirmButtonText: "Перейти на главную страницу",
+                                closeOnConfirm: false,
+                                closeOnCancel: true
+                            },
+                            function(isConfirm){
+                                if (isConfirm) {
+                                    document.location.href = '/'
+                                }else{
+
+                                }
+                            })
+                        }
+                    }).error(function(){
+                        swal({
+                        title: 'Ошибка',
+                        text: 'Пользователь уже существует',
+                        type: 'error',
+                        closeOnConfurm: true
+                    })
+                    })
+                    return false
+                }
+            })
+        })
+    </script>
+{% end %}

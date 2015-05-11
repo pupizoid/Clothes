@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <form class="form-horizontal col-md-12" action="" method="post">
+        <fieldset>
+
+            <!-- Form Name -->
+            <legend>Личная информация</legend>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="name">Имя</label>
+
+                <div class="col-md-5">
+                    <input id="name" name="name" type="text" placeholder="" class="form-control input-md" required="">
+
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="last_name">Фамилия</label>
+
+                <div class="col-md-5">
+                    <input id="last_name" name="last_name" type="text" placeholder="" class="form-control input-md"
+                           required="">
+
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="surname">Отчество</label>
+
+                <div class="col-md-5">
+                    <input id="surname" name="surname" type="text" placeholder="" class="form-control input-md">
+
+                </div>
+            </div>
+
+            <legend>Адрес</legend>
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="address.country">Страна</label>
+
+                <div class="col-md-5">
+                    <input id="address.country" name="address.country" type="text" placeholder=""
+                           class="form-control input-md" required="">
+
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="address.state">Регион</label>
+
+                <div class="col-md-5">
+                    <input id="address.state" name="address.state" type="text" placeholder=""
+                           class="form-control input-md" required="">
+
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="address.city">Город</label>
+
+                <div class="col-md-5">
+                    <input id="address.city" name="address.city" type="text" placeholder=""
+                           class="form-control input-md" required="">
+
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="address.street">Улица</label>
+
+                <div class="col-md-5">
+                    <input id="address.street" name="address.street" type="text" placeholder=""
+                           class="form-control input-md" required="">
+
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="address.house">Номер дома</label>
+
+                <div class="col-md-5">
+                    <input id="address.house" name="address.house" type="text" placeholder=""
+                           class="form-control input-md" required="">
+
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="address.flat">Квартира</label>
+
+                <div class="col-md-5">
+                    <input id="address.flat" name="address.flat" type="text" placeholder=""
+                           class="form-control input-md" required="">
+
+                </div>
+            </div>
+
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="submit"></label>
+
+                <div class="col-md-4">
+                    <button id="submit" name="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+</div>
+{% end %}
+{% block script %}
+<script>
+    jQuery(document).ready(function(){
+        jQuery('form').submit(function(){
+            var form = jQuery(this)
+            jQuery.ajax({
+                url: form.attr('action'),
+                method: form.attr('method'),
+                data: form.serialize(),
+                success: function(response){
+                    swal({
+                        title: 'Сохранено',
+                        type: 'success',
+                        closeOnConfirm: true
+                    })
+                }
+            })
+            return false
+        })
+    })
+</script>
+{% end %}

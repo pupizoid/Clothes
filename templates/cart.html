@@ -1,0 +1,10 @@
+{% for item in items %}
+<li>
+    <a href="/detail/{{ item['_id'] }}">
+        <b>{{ item['name'] }}</b>
+        <span>{{ int(item['price']) }} руб</span>
+    </a>
+</li>
+{% end %}
+<li class="divider"></li>
+<li><a href="/cart">Всего: {{ total_price }} руб</a></li>

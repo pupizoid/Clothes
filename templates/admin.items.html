@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Превью</th>
+                <th>Название</th>
+                <th>Цена</th>
+                <th>Дата создания</th>
+                <th>Статус</th>
+                <th>Лидер</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i, item in enumerate(data.items.values()) %}
+            <tr>
+                <td>{{ i+1 }}</td>
+                <td><img src="/thumbnail/{{ item.get('_id', '') }}" alt="Превью"/></td>
+                <td>{{ item.get('name', '') }}</td>
+                <td>{{ int(item.get('price', '')) }}</td>
+                <td>{{ data.ISOtoStr(item.get('created', '')) }}</td>
+                <td>
+                    <label class="label {{ 'label-success' if item.get('status', False) else 'label-default'}}">
+                        {{ 'опубликован' if item.get('status', False) else 'не опубликован' }}</label>
+                </td>
+                <td>{{ 'Да' if item.get('leader', '') else '' }}</td>
+                <td>
+                    <a class="ajax" href="javascript:;" data-target="{{ str(item.get('_id', '')) }}"
+                       data-href="/admin/items/delete"><i class="fa fa-remove"></i></a>
+                    <a href="/admin/item/edit/{{ str(item.get('_id', '')) }}"><i class="fa fa-edit"></i></a>
+                    <a class="ajax" href="javascript:;" data-href="/admin/items/setleader" data-target="{{ str(item.get('_id', '')) }}"><i class="fa fa-level-up"></i></a>
+                </td>
+            </tr>
+            {% end %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-10 col-md-offset-1">
+        <h3><a href="/admin/items/add" class="btn btn-primary">Добавить товар</a>
+        </h3>
+    </div>
+</div>
+{% end %}

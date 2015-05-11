@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container main-container">
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-12">
+
+            <!-- RECENT PRODUCT -->
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="no-padding">
+                    <span class="title">ЛИДЕР ПРОДАЖ</span>
+                </div>
+                {% raw data.leader %}
+
+
+            </div>
+            <!-- End RECENT PRODUCT -->
+
+        </div>
+
+        <div class="clearfix visible-sm"></div>
+
+        <!-- Cart -->
+        <div class="col-lg-9 col-md-9 col-sm-12">
+            <div class="col-lg-12 col-sm-12">
+                <span class="title">ОФОРМЛЕНИЕ ЗАКАЗА</span>
+            </div>
+            <div class="col-lg-12 col-sm-12 hero-feature">
+                <form action="" class="cart-form">
+                    <table class="table table-bordered tbl-checkout">
+                        <tbody>
+                        <tr>
+                            <td>Имя</td>
+                            <td>
+                                <input type="text" name="fisrt_name" class="form-control">
+                            </td>
+                            <td>Фамилия</td>
+                            <td>
+                                <input type="text" name="last_name" class="form-control">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>
+                                <input type="text" name="email" class="form-control">
+                            </td>
+                            <td>Моб. телефон</td>
+                            <td>
+                                <input type="text" name="tel" class="form-control">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Адрес</td>
+                            <td colspan="3">
+                                <textarea name="address" class="form-control"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Город</td>
+                            <td>
+                                <input type="text" name="city" class="form-control">
+                            </td>
+                            <td>Почтовый индекс</td>
+                            <td>
+                                <input type="text" name="postcode" class="form-control">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Комментарий</td>
+                            <td colspan="3">
+                                <textarea name="comment" class="form-control"></textarea>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered tbl-cart">
+                        <thead>
+                        <tr>
+                            <td class="hidden-xs">Картинка</td>
+                            <td>Название</td>
+                            <td>Размер</td>
+                            <td>Цвет</td>
+                            <td class="td-qty">Количество</td>
+                            <td>Цена за шт.</td>
+                            <td>Цена всего</td>
+                            <td>Удалить</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in data.cart %}
+                        <tr class="product" id="{{ str(item.get('_id', '')) }}">
+                            <td class="hidden-xs">
+                                <a href="detail.html">
+                                    <img src="/thumbnail/{{ item.get('_id', '') }}" alt="{{ item.get('name', '') }}"
+                                         title="" width="47"
+                                         height="47">
+                                </a>
+                            </td>
+                            <td><a href="detail.html">{{ item.get('name', '') }}</a>
+                            </td>
+                            <td>
+                                <select name="size[{{ item.get('_id', '') }}]">
+                                    {% for size in data.sizes %}
+                                    <option value="{{ size }}">{{ size }}</option>
+                                    {% end %}
+                                </select>
+                            </td>
+                            <td>
+                                <select name="color[{{ item.get('_id', '') }}]" class="color">
+                                    {% for color in data.colors %}
+                                    <option value="{{ color }}">{{ color }}</option>
+                                    {% end %}
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="" value="1"
+                                       class="input-qty form-control text-center"
+                                       style="display: block;">
+                            </td>
+                            <td class="unit-price">{{ int(item.get('price', '')) }} руб</td>
+                            <td class="units-price"></td>
+                            <td class="text-center">
+                                <a href="javascript:;" class="remove_cart" iid="{{ str(item.get('_id', '')) }}" rel="2">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% end %}
+                        <tr>
+                            <td colspan="5" align="right">Доставка</td>
+                            <td class="total shipping" colspan="2"><b>{{ data.shipping }}</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" align="right">Всего</td>
+                            <td class="total total-price" colspan="2"><b>{{ data.total + data.shipping }}</b></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="btn-group btns-cart">
+                        <button type="button" class="btn btn-primary continue">Продолжить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- End Cart -->
+    </div>
+</div>
+{% end %}
+{% block script %}
+function calculate_cart() {
+var tprice = 0
+var shipping = parseInt(jQuery('.shipping').text())
+jQuery('.tbl-cart tr.product').each(function () {
+var quantity = parseInt(jQuery(this).find('.quantity').val())
+var price = parseInt(jQuery(this).find('.price').text())
+tprice += quantity * price
+jQuery(this).find('.tprice').html(quantity * price)
+})
+jQuery('.total-price').find('b').html(tprice + shipping)
+}
+jQuery(document).ready(function () {
+jQuery.ajax({
+url: '/getcart',
+method: 'get',
+dataType: 'json',
+success: function (response) {
+jQuery('.cart-content').html(response.html)
+}
+})
+jQuery('.tbl-cart select').change(function () {
+calculate_cart()
+})
+jQuery('.continue').click(function () {
+var form = jQuery('.cart-form')
+var request = jQuery.ajax({
+url: '/checkout',
+method: 'post',
+data: form.serializeJSON()
+})
+})
+jQuery('.remove-cart').click(function () {
+var id = jQuery(this).attr('iid')
+jQuery.ajax({
+url: '/cartdelitem/' + id,
+method: 'get',
+success: function () {
+jQuery('tr#' + id).remove()
+var request = jQuery.ajax({
+url: '/getcart',
+method: 'get',
+dataType: 'json',
+success: function (response) {
+jQuery('.cart-content').html(response.html)
+}
+})
+}
+})
+})
+})
+{% end %}

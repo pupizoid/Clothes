@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Название</th>
+                <th>Количество товаров</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i, cat in enumerate(data.cats.values()) %}
+            <tr>
+                <td>{{ i+1 }}</td>
+                <td>{{ cat.get('name', '') }}</td>
+                <td>{{ cat.get('qty', '') }}</td>
+                <td>
+                    <a class="ajax" href="javascript:;" data-target="{{ str(cat.get('_id', '')) }}"
+                       data-href="/admin/category/delete"><i class="fa fa-remove"></i></a>
+                </td>
+            </tr>
+            {% end %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-10 col-md-offset-1">
+        <hr/>
+    </div>
+    <form action="/admin/category" class="col-md-4 col-md-offset-1 ajax" method="post">
+        <div class="form-group">
+            <label for="name">Название</label>
+            <input type="text" class="form-control" name="name" required=""/>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">Добавить</button>
+        </div>
+    </form>
+</div>
+{% end %}

@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-12">
+
+        <!-- Best Seller -->
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="no-padding">
+                <span class="title">Лидер продаж</span>
+            </div>
+            {% raw data.leader %}
+        </div>
+        <!-- End Best Seller -->
+
+    </div>
+
+    <div class="clearfix visible-sm"></div>
+
+    <!-- Cart -->
+    <div class="col-lg-9 col-md-9 col-sm-12">
+        <div class="col-lg-12 col-sm-12">
+            <span class="title">КОРЗИНА</span>
+        </div>
+        <div class="col-lg-12 col-sm-12 hero-feature">
+            <table class="table table-bordered tbl-cart">
+                <thead>
+                <tr>
+                    <td class="hidden-xs">Картинка</td>
+                    <td>Название</td>
+                    <td>Размер</td>
+                    <td>Цвет</td>
+                    <td class="td-qty">Количество</td>
+                    <td>Цена за шт.</td>
+                    <td>Цена всего</td>
+                    <td>Удалить</td>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in data.cart %}
+                <tr class="product" id="{{ str(item.get('_id', '')) }}">
+                    <td class="hidden-xs">
+                        <a href="detail.html">
+                            <img src="/thumbnail/{{ item.get('_id', '') }}" alt="{{ item.get('name', '') }}" title="" width="47"
+                                 height="47">
+                        </a>
+                    </td>
+                    <td><a href="detail.html">{{ item.get('name', '') }}</a>
+                    </td>
+                    <td>
+                        <select name="size[{{ item.get('_id', '') }}]">
+                            {% for size in data.sizes %}
+                            <option value="{{ size }}">{{ size }}</option>
+                            {% end %}
+                        </select>
+                    </td>
+                    <td>
+                        <select name="color[{{ item.get('_id', '') }}]" class="color">
+                            {% for color in data.colors %}
+                            <option value="{{ color }}">{{ color }}</option>
+                            {% end %}
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" name="" value="1"
+                               class="input-qty form-control text-center"
+                               style="display: block;">
+                    </td>
+                    <td class="unit-price">{{ int(item.get('price', '')) }} руб</td>
+                    <td class="units-price"></td>
+                    <td class="text-center">
+                        <a href="javascript:;" class="remove_cart" iid="{{ str(item.get('_id', '')) }}" rel="2">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% end %}
+                <tr>
+                    <td colspan="6" align="right">Всего</td>
+                    <td class="total" colspan="2"><b class="total-price"></b>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="btn-group btns-cart">
+                <button type="button" class="btn btn-primary" onclick="window.location='/catalogue'"><i
+                        class="fa fa-arrow-circle-left"></i> Вернуться к каталогу
+                </button>
+                <button type="button" class="btn btn-primary" onclick="window.location.reload()">Обновить корзину
+                </button>
+                <button type="button" class="btn btn-primary" onclick="window.location='/checkout'">Оформление заказа <i
+                        class="fa fa-arrow-circle-right"></i></button>
+            </div>
+
+        </div>
+    </div>
+    <!-- End Cart -->
+</div>
+{% end %}
+{% block script %}
+    function calculate_cart() {
+        var tprice = 0
+        jQuery('.tbl-cart tr.product').each(function () {
+            var quantity = parseInt(jQuery(this).find('.input-qty').val())
+            var price = parseInt(jQuery(this).find('.unit-price').text())
+            tprice += quantity * price
+            jQuery(this).find('.units-price').html(quantity * price)
+        })
+        jQuery('.total-price').html(tprice)
+    }
+    jQuery(document).ready(function () {
+        calculate_cart()
+        jQuery.ajax({
+            url: '/getcart',
+            method: 'get',
+            dataType: 'json',
+            success: function (response) {
+                jQuery('.cart-content').html(response.html)
+            }
+        })
+        jQuery('.tbl-cart .input-qty').change(function () {
+            calculate_cart()
+        })
+        jQuery('.continue').click(function () {
+            var form = jQuery('.cart-form')
+            var request = jQuery.ajax({
+                url: '/checkout',
+                method: 'post',
+                data: form.serializeJSON()
+            })
+        })
+        jQuery('.remove_cart').click(function () {
+            var id = jQuery(this).attr('iid')
+            jQuery.ajax({
+                url: '/cartdelitem/' + id,
+                method: 'get',
+                success: function () {
+                    jQuery('tr#' + id).remove()
+                    var request = jQuery.ajax({
+                        url: '/getcart',
+                        method: 'get',
+                        dataType: 'json',
+                        success: function (response) {
+                            jQuery('.cart-content').html(response.html)
+                        }
+                    })
+                }
+            })
+        })
+    })
+{% end %}

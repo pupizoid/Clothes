@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <form enctype="multipart/form-data" action="/admin/items/add" method="post" class="col-md-10 col-md-offset-1" >
+            <div class="form-group col-md-6">
+                <label for="name">Название</label>
+                <input type="text" class="form-control" name="name" id="name" required=""/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="category">Категория</label>
+                <select name="category" id="category" class="form-control" required="">
+                    {% for cat in data.cats %}
+                        <option value="{{ cat.get('name', '') }}">{{ cat.get('name', '') }}</option>
+                    {% end %}
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="price">Цена</label>
+                <input type="text" class="form-control" name="price" id="price" required=""/>
+            </div>
+            <div class="form-group col-md-6" style="height: 59px">
+                <label for="status">Опубликовать</label>
+                <div>
+                    <label for="status">
+                        <input type="radio" checked name="status" value="True"/> Да
+                    </label>
+                    <label for="status">
+                        <input type="radio" name="status" value="False"/> Нет
+                    </label>
+                </div>
+            </div>
+            <div class="from-group col-md-6">
+                <label for="comment">Комментарий (описание)</label>
+                <textarea class="form-control" name="comment" cols="30" id="comment" style="min-height: 59px;"></textarea>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="picture">Вьюха</label>
+                <input type="file" name="picture" multiple="true" id="picture" required=""/>
+            </div>
+        </form>
+    </div>
+{% end %}
+{% block script %}
+    jQuery(document).ready(function () {
+        jQuery('#picture').fileinput()
+    })
+{% end %}
