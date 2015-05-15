@@ -40,7 +40,8 @@
                 <tr class="product" id="{{ str(item.get('_id', '')) }}">
                     <td class="hidden-xs">
                         <a href="detail.html">
-                            <img src="/thumbnail/{{ item.get('_id', '') }}" alt="{{ item.get('name', '') }}" title="" width="47"
+                            <img src="/thumbnail/{{ item.get('_id', '') }}" alt="{{ item.get('name', '') }}" title=""
+                                 width="47"
                                  height="47">
                         </a>
                     </td>
@@ -97,6 +98,7 @@
 </div>
 {% end %}
 {% block script %}
+<script>
     function calculate_cart() {
         var tprice = 0
         jQuery('.tbl-cart tr.product').each(function () {
@@ -147,4 +149,5 @@
             })
         })
     })
+</script>
 {% end %}

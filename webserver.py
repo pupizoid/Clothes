@@ -8,10 +8,6 @@ import logging
 import urlparse
 import urllib
 import tornado.httpserver
-import tornado.ioloop
-import tornado.web
-import tornado.httpserver
-import tornado.websocket
 import tornado.httputil
 import tornado.ioloop
 import tornado.web
@@ -32,7 +28,6 @@ from pymongo.errors import DuplicateKeyError
 from pymongo import MongoClient
 from passlib.utils import generate_password
 from passlib.hash import sha256_crypt
-from models import *
 from tornado.template import Loader
 from datetime import datetime
 from torndsession.sessionhandler import SessionBaseHandler
@@ -169,7 +164,6 @@ class BaseHandler(SessionBaseHandler):
         except TypeError:
             return ''
 
-
     @property
     def cart_count(self):
         data = Data()
@@ -243,7 +237,6 @@ class Login(BaseHandler):
 
 class Logout(BaseHandler):
     """ Yet another logout handler """
-
     def get(self, *args, **kwargs):
         self.clear_cookie('user')
 
@@ -296,7 +289,7 @@ class AddItemToCart(BaseHandler):
                 ))
             except DuplicateKeyError:
                 data.db.cart.update(dict(_id=self.session.id),
-                                    {'$push': dict(iids=iid)})
+                                    {'$addToSet': dict(iids=iid)})
             self.finish()
         else:
             raise tornado.web.HTTPError(404)
@@ -336,7 +329,6 @@ class Detail(BaseHandler):
 
 
 class Checkout(BaseHandler):
-    # @authenticated('public')
     def get(self):
         data = Data()
         cart = data.db.cart.find_one(dict(_id=self.session.id))
@@ -354,6 +346,43 @@ class Checkout(BaseHandler):
         data.total = reduce(lambda res, x: res + int(x['price']), items.values(), 0)
         self.render('checkout.html', data=data)
 
+    def post(self):
+        data = Data()
+        request = json.loads(self.request.body)
+        # todo: допилить проверку полей
+        if len(request['size']) == len(request['qty']) == len(request['color']):
+            obj = dict(
+                created=datetime.utcnow(),
+                oid=int(data.db.system_js.getNextSequence('oid')),
+                address=dict(
+                    street=request['address'],
+                    city=request['city'],
+                    postcode=request['postcode'],
+                    ssid=self.session.id,
+                ),
+                customer=dict(
+                    first_name=request['first_name'],
+                    last_name=request['last_name'],
+                    email=request['email'],
+                    tel=request['tel'],
+                    comment=request['comment']
+                ),
+                shipment=list(
+                    dict(
+                        id=i,
+                        size=request['size'][i],
+                        quantity=request['qty'][i],
+                        color=request['color'][i]
+                    ) for i in request['qty']
+                )
+            )
+            res = data.db.orders.insert_one(obj)
+            if res.inserted_id:
+                self.finish()
+            else:
+                raise tornado.web.HTTPError(500)
+        else:
+            raise tornado.web.HTTPError(404)
 
 class Catalogue(BaseHandler):
     def get(self):
@@ -391,7 +420,6 @@ class Cart(BaseHandler):
         data.colors = ['Белый', 'Черный']
         self.render('cart.page.html', data=data)
 
-    # @authenticated('public')
     def post(self):
         request = json.loads(self.request.body)
         if len(request):
@@ -593,7 +621,7 @@ class TornadoWebServer(tornado.web.Application):
 
 
 if __name__ == '__main__':
-    print('[*] Waiting for msp.control-panel requests')
+    print('[*] Waiting for http requests')
     logging.basicConfig(filename="/tmp/control-panel.log", level=logging.DEBUG)
     application = TornadoWebServer()
     application.mongo = MongoClient()

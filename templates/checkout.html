@@ -31,7 +31,7 @@
                         <tr>
                             <td>Имя</td>
                             <td>
-                                <input type="text" name="fisrt_name" class="form-control">
+                                <input type="text" name="first_name" class="form-control">
                             </td>
                             <td>Фамилия</td>
                             <td>
@@ -112,7 +112,7 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="" value="1"
+                                <input type="text" name="qty[{{ item.get('_id', '') }}]" value="1"
                                        class="input-qty form-control text-center"
                                        style="display: block;">
                             </td>
@@ -146,54 +146,57 @@
 </div>
 {% end %}
 {% block script %}
-function calculate_cart() {
-var tprice = 0
-var shipping = parseInt(jQuery('.shipping').text())
-jQuery('.tbl-cart tr.product').each(function () {
-var quantity = parseInt(jQuery(this).find('.quantity').val())
-var price = parseInt(jQuery(this).find('.price').text())
-tprice += quantity * price
-jQuery(this).find('.tprice').html(quantity * price)
-})
-jQuery('.total-price').find('b').html(tprice + shipping)
-}
-jQuery(document).ready(function () {
-jQuery.ajax({
-url: '/getcart',
-method: 'get',
-dataType: 'json',
-success: function (response) {
-jQuery('.cart-content').html(response.html)
-}
-})
-jQuery('.tbl-cart select').change(function () {
-calculate_cart()
-})
-jQuery('.continue').click(function () {
-var form = jQuery('.cart-form')
-var request = jQuery.ajax({
-url: '/checkout',
-method: 'post',
-data: form.serializeJSON()
-})
-})
-jQuery('.remove-cart').click(function () {
-var id = jQuery(this).attr('iid')
-jQuery.ajax({
-url: '/cartdelitem/' + id,
-method: 'get',
-success: function () {
-jQuery('tr#' + id).remove()
-var request = jQuery.ajax({
-url: '/getcart',
-method: 'get',
-dataType: 'json',
-success: function (response) {
-jQuery('.cart-content').html(response.html)
-}
-})
-}
-})
-})
-})
+<script>
+    function calculate_cart() {
+        var tprice = 0
+        var shipping = parseInt(jQuery('.shipping').text())
+        jQuery('.tbl-cart tr.product').each(function () {
+            var quantity = parseInt(jQuery(this).find('.input-qty').val())
+            var price = parseInt(jQuery(this).find('.unit-price').text())
+            tprice += quantity * price
+            jQuery(this).find('.units-price').html(quantity * price)
+        })
+        jQuery('.total-price').find('b').html(tprice + shipping)
+    }
+    jQuery(document).ready(function () {
+        calculate_cart()
+        jQuery.ajax({
+            url: '/getcart',
+            method: 'get',
+            dataType: 'json',
+            success: function (response) {
+                jQuery('.cart-content').html(response.html)
+            }
+        })
+        jQuery('.tbl-cart .input-qty').change(function () {
+            calculate_cart()
+        })
+        jQuery('.continue').click(function () {
+            var form = jQuery('.cart-form')
+            var request = jQuery.ajax({
+                url: '/checkout',
+                method: 'post',
+                data: form.serializeJSON()
+            })
+        })
+        jQuery('.remove-cart').click(function () {
+            var id = jQuery(this).attr('iid')
+            jQuery.ajax({
+                url: '/cartdelitem/' + id,
+                method: 'get',
+                success: function () {
+                    jQuery('tr#' + id).remove()
+                    var request = jQuery.ajax({
+                        url: '/getcart',
+                        method: 'get',
+                        dataType: 'json',
+                        success: function (response) {
+                            jQuery('.cart-content').html(response.html)
+                        }
+                    })
+                }
+            })
+        })
+    })
+</script>
 {% end %}
